@@ -107,7 +107,7 @@ services:
      - "9104:4200"
      - "9004:9001"
     volumes:
-     - ${LANDING_PAGE_DIR}:/data
+     - ${LANDING_PAGE_DIR}:/data/www/html
     networks:
      - net
   cloud9:
@@ -120,7 +120,7 @@ services:
     expose:
      - "80"
     volumes:
-     - ${LANDING_PAGE_DIR}/www/html:/workspace
+     - ${LANDING_PAGE_DIR}:/workspace
     networks:
      - net   
   dockerui:
