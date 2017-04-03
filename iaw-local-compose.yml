@@ -109,7 +109,20 @@ services:
     volumes:
      - ${LANDING_PAGE_DIR}:/data
     networks:
-     - net    
+     - net
+  cloud9:
+    image: kdelfour/cloud9-docker
+    container_name: cloud9
+    hostname: cloud9
+    environment:
+      VIRTUAL_PORT: 80
+      VIRTUAL_HOST: c9.iaw.io
+    expose:
+     - "80"
+    volumes:
+     - ${LANDING_PAGE_DIR}/www/html:/workspace
+    networks:
+     - net   
   dockerui:
     image: uifd/ui-for-docker
     container_name: docker-ui
