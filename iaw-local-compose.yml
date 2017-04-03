@@ -1,0 +1,103 @@
+version: '2'
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    environment:
+      DEFAULT_HOST: iaw.io
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ${SSL_DIR}:/etc/nginx/certs
+    networks:
+     - net
+  db:
+    image: orboan/dcsss-mariadb
+    container_name: db.iaw.io
+    hostname: db.iaw.io
+    environment:
+      SHELLINABOX_PORT: 9102
+      MYSQL_ROOT_PASSWORD: mariadb
+      MYSQL_DATABASE1: nextcloud
+      MYSQL_USER1: nc_user
+      MYSQL_PASSWORD1: nextcloud
+      MYSQL_DATABASE2: phpmyadmin
+      MYSQL_USER2: pmauser
+      MYSQL_PASSWORD2: phpmyadmin
+      PASSWORD: webapp
+    ports:
+     - "3306:3306"
+     - "2222:22"
+     - "9102:4200"
+     - "9002:9001"
+    volumes:
+     - ~/data/db:/var/lib/mysql
+    networks:
+      - net
+  nc:
+    depends_on:
+      - db
+    image: orboan/nextcloud-https
+    container_name: nc.iaw.io
+    hostname: nc.iaw.io
+    environment:
+      SHELLINABOX_PORT: 9101
+      VIRTUAL_HOST: nc.iaw.io
+      VIRTUAL_PROTO: https
+      VIRTUAL_PORT: 443      
+    ports:
+     - "444:443"
+     - "81:80"
+     - "2221:22"
+     - "9101:4200"
+     - "9001:9001"
+    volumes:
+     - ~/data/nc:/var/www/html/data
+    networks:
+     - net
+  pma:
+    depends_on:
+     - db
+    image: orboan/dcsss-httpd-phpmyadmin
+    container_name: pma.iaw.io
+    hostname: pma.iaw.io
+    environment:
+      SHELLINABOX_PORT: 9103
+      MYSQL_HOST: db.iaw.io
+      MYSQL_DATABASE: phpmyadmin
+      MYSQL_USER: pmauser
+      MYSQL_PASSWORD: phpmyadmin
+      MYSQL_ROOT_PASSWORD: mariadb
+      PASSWORD: webapp
+      VIRTUAL_HOST: pma.iaw.io
+      VIRTUAL_PORT: 443 
+      VIRTUAL_PROTO: https
+    ports:
+     - "8080:80"
+     - "4443:443"
+     - "2223:22"
+     - "9103:4200"
+     - "9003:9001"
+    networks:
+     - net
+  col:
+    image: orboan/collabora:unsecure
+    container_name: col.iaw.io
+    hostname: col.iaw.io
+    environment:
+      PASSWORD: webapp
+      VIRTUAL_HOST: col.iaw.io
+      VIRTUAL_PORT: 9980       
+      VIRTUAL_PROTO: https
+    ports:
+     - "9980:9980" 
+    networks:
+     - net    
+networks:
+  net:
+    driver: bridge     
+    ipam:
+     config:
+     - subnet: 172.25.0.0/24 
