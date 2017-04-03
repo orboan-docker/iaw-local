@@ -1,0 +1,58 @@
+SHA1 Fingerprint=16:1B:ED:77:C7:21:AB:4D:2A:15:A9:91:CF:19:52:59:EB:CF:95:F6
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 14916307507084783716 (0xcf015ea5d047f064)
+    Signature Algorithm: sha1WithRSAEncryption
+        Issuer: C=CA, ST=Catalonia, L=Barcelona, O=orboan, OU=IT, CN=*.iaw.io/emailAddress=admin@iaw.io
+        Validity
+            Not Before: Apr  2 15:36:52 2017 GMT
+            Not After : Mar  9 15:36:52 2117 GMT
+        Subject: C=CA, ST=Catalonia, L=Barcelona, O=orboan, OU=IT, CN=*.iaw.io/emailAddress=admin@iaw.io
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:ce:37:bb:c9:fd:b8:b2:e9:dc:96:48:96:f0:f7:
+                    82:43:f2:9d:a3:dd:ed:04:52:ae:31:39:99:6a:89:
+                    2c:9b:c1:16:c2:e7:81:f8:a8:9b:c9:2c:4a:ce:7e:
+                    36:1c:5e:a2:1c:9b:4d:29:77:c3:3a:02:1a:ad:0d:
+                    56:36:e5:88:dd:3d:54:d2:1c:86:35:26:76:44:30:
+                    bd:65:4e:5a:82:73:f8:51:d2:df:73:f6:ca:b1:4f:
+                    3c:5e:15:d1:58:79:4b:ba:4b:1e:29:b3:ad:2b:77:
+                    db:d1:ce:33:a9:b2:38:ad:37:21:9d:ca:c7:76:08:
+                    bf:14:c8:15:a6:30:c9:e4:53:82:88:af:0d:fe:3d:
+                    14:06:79:81:c8:dc:98:3a:84:8f:d9:ea:f0:b7:c8:
+                    da:65:07:5d:ec:4a:a4:d6:a0:10:b5:31:64:6d:55:
+                    50:40:2f:34:1b:80:46:78:04:63:a5:15:90:28:1d:
+                    c8:8c:a9:dd:af:cc:89:b5:f7:34:5f:5e:fa:70:29:
+                    2c:ed:c6:22:87:99:db:08:9a:a6:ab:30:f7:0a:33:
+                    ff:48:0a:38:32:89:53:22:c6:6d:ce:5e:a8:50:2c:
+                    89:9a:ba:bd:d9:0a:5f:ba:57:26:2f:a4:d9:49:af:
+                    68:12:c3:16:c8:41:ab:f0:ad:da:b7:44:6d:32:d2:
+                    5c:71
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Subject Key Identifier: 
+                8C:9C:8C:89:9D:2E:01:7B:54:D9:60:48:35:27:C2:89:17:5D:9F:81
+            X509v3 Authority Key Identifier: 
+                keyid:8C:9C:8C:89:9D:2E:01:7B:54:D9:60:48:35:27:C2:89:17:5D:9F:81
+
+            X509v3 Basic Constraints: 
+                CA:TRUE
+    Signature Algorithm: sha1WithRSAEncryption
+         64:f7:2c:b2:0a:9b:f0:e9:ac:67:6d:4e:39:53:ab:6f:5f:a6:
+         27:7b:38:00:3d:0b:18:1a:1f:b4:e7:9c:6c:94:a8:43:64:fa:
+         49:94:ed:8d:33:ab:80:d5:aa:39:a4:1b:b1:b4:2c:ea:e8:fc:
+         c1:32:20:af:7d:97:5d:9e:26:8c:c6:66:37:42:82:76:0d:7e:
+         bf:66:9b:f2:f6:a3:81:5c:c5:ae:68:44:dd:33:c4:3a:6f:28:
+         0b:ac:1c:49:ef:90:95:96:d5:31:14:f4:df:60:ee:63:a7:f8:
+         9c:a6:82:7c:0d:ab:52:3e:e0:ef:1d:65:64:98:e3:13:52:d0:
+         f2:40:cb:e4:d1:93:47:67:f8:96:d5:d3:30:48:5c:5b:a3:cc:
+         73:9e:24:d9:b1:3e:23:dd:b0:97:22:c2:8f:b4:62:06:9d:43:
+         56:2f:31:0d:16:7d:a4:78:f9:62:13:97:7b:a9:a2:5e:5e:db:
+         eb:24:44:f4:57:0a:3d:85:63:60:61:dd:ff:f7:c7:e6:83:96:
+         f5:3c:3e:68:2b:cc:44:74:26:83:7c:5e:57:0e:33:77:f0:80:
+         48:06:ed:71:bc:84:54:8a:b0:84:eb:a5:bb:6e:22:15:c3:8b:
+         94:aa:25:09:8d:f4:af:09:57:d7:0a:7d:09:6c:e1:59:f6:ad:
+         08:9a:f9:61
