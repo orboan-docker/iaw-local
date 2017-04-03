@@ -43,16 +43,12 @@ services:
     container_name: nc.iaw.io
     hostname: nc.iaw.io
     environment:
-      SHELLINABOX_PORT: 9101
       VIRTUAL_HOST: nc.iaw.io
       VIRTUAL_PROTO: https
       VIRTUAL_PORT: 443      
     ports:
      - "444:443"
      - "81:80"
-     - "2221:22"
-     - "9101:4200"
-     - "9001:9001"
     volumes:
      - ~/data/nc:/var/www/html/data
     networks:
@@ -95,6 +91,17 @@ services:
      - "9980:9980" 
     networks:
      - net    
+  dockerui:
+    image: uifd/ui-for-docker
+    container_name: docker-ui
+    hostname: docker-ui
+    ports:
+     - "9990:9000"
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+    privileged: true
+    networks:
+     - net
 networks:
   net:
     driver: bridge     
