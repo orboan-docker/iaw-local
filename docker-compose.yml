@@ -1,0 +1,186 @@
+version: '2'
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    environment:
+      DEFAULT_HOST: ${DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ${SSL_DIR}:/etc/nginx/certs
+    networks:
+     - net
+  db:
+    image: orboan/dcsss-mariadb
+    container_name: ${MYSQL_DOMAIN}
+    hostname: ${MYSQL_DOMAIN}
+    environment:
+      SHELLINABOX_PORT: ${MYSQL_SHELLINABOX_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE1: ${MYSQL_DATABASE_NC}
+      MYSQL_USER1: ${MYSQL_USER_NC}
+      MYSQL_PASSWORD1: ${MYSQL_PASSWORD_NC}
+      MYSQL_DATABASE2: ${MYSQL_DATABASE_PMA}
+      MYSQL_USER2: ${MYSQL_USER_PMA}
+      MYSQL_PASSWORD2: ${MYSQL_PASSWORD_PMA}
+      MYSQL_DATABASE3: ${MYSQL_DATABASE_WP}
+      MYSQL_USER3: ${MYSQL_USER_WP}
+      MYSQL_PASSWORD3: ${MYSQL_PASSWORD_WP}
+      PASSWORD: ${BA_SSH_PASSWORD}
+    ports:
+     - "${MYSQL_DB_PORT}:3306"
+     - "${MYSQL_SSH_PORT}:22"
+     - "${MYSQL_SHELLINABOX_PORT}:4200"
+     - "${MYSQL_SUPERVISOR_PORT}:9001"
+    volumes:
+     - ~/data/db:/var/lib/mysql
+    networks:
+      - net
+  nc:
+    depends_on:
+      - db
+    image: orboan/nextcloud-https
+    container_name: ${NEXTCLOUD_DOMAIN}
+    hostname: ${NEXTCLOUD_DOMAIN}
+    environment:
+      VIRTUAL_HOST: ${NEXTCLOUD_DOMAIN}
+      VIRTUAL_PROTO: https
+      VIRTUAL_PORT: 443      
+    ports:
+     - "${NEXTCLOUD_HTTPS_PORT}:443"
+     - "${NEXTCLOUD_HTTP_PORT}:80"
+    volumes:
+     - ~/data/nc:/var/www/html/data
+    networks:
+     - net
+  pma:
+    depends_on:
+     - db
+    image: orboan/dcsss-httpd-phpmyadmin
+    container_name: ${PMA_DOMAIN}
+    hostname: ${PMA_DOMAIN}
+    environment:
+      SHELLINABOX_PORT: ${PMA_SHELLINABOX_PORT}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_DATABASE: ${MYSQL_DATABASE_PMA}
+      MYSQL_USER: ${MYSQL_USER_PMA}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD_PMA}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      PASSWORD: ${BA_SSH_PASSWORD}
+      VIRTUAL_HOST: ${PMA_DOMAIN}
+      VIRTUAL_PORT: 443 
+      VIRTUAL_PROTO: https
+    ports:
+     - "${PMA_HTTP_PORT}:80"
+     - "${PMA_HTTPS_PORT}:443"
+     - "${PMA_SSH_PORT}:22"
+     - "${PMA_SHELLINABOX_PORT}:4200"
+     - "${PMA_SUPERVISOR_PORT}:9001"
+    networks:
+     - net
+  col:
+    image: orboan/collabora:unsecure
+    container_name: ${COLLABORA_DOMAIN}
+    hostname: ${COLLABORA_DOMAIN}
+    environment:
+      PASSWORD: ${BA_SSH_PASSWORD}
+      VIRTUAL_HOST: ${COLLABORA_DOMAIN}
+      VIRTUAL_PORT: 9980       
+      VIRTUAL_PROTO: https
+    ports:
+     - "${COLLABORA_PORT}:9980" 
+    networks:
+     - net    
+  landing:
+    image: orboan/dcsss-httpd-php
+    container_name: ${DOMAIN}
+    hostname: ${DOMAIN}
+    environment:
+      SHELLINABOX_PORT: ${LANDING_PAGE_SHELLINABOX_PORT}
+      VIRTUAL_HOST: ${DOMAIN}
+      VIRTUAL_PORT: 80
+      PASSWORD: ${BA_SSH_PASSWORD}
+    expose:
+     - "80"
+    ports:
+     - "${LANDING_PAGE_SSH_PORT}:22"
+     - "${LANDING_PAGE_SHELLINABOX_PORT}:4200"
+     - "${LANDING_PAGE_SUPERVISOR_PORT}:9001"
+    volumes:
+     - ${LANDING_PAGE_DIR}:/data/www/html
+    networks:
+     - net
+  lpc9:
+    image: kdelfour/cloud9-docker
+    container_name: ${LPC9_DOMAIN}
+    hostname: ${LPC9_DOMAIN}
+    environment:
+      VIRTUAL_PORT: 80
+      VIRTUAL_HOST: ${LPC9_DOMAIN}
+    expose:
+     - "80"
+    volumes:
+     - ${LANDING_PAGE_DIR}:/workspace
+    networks:
+     - net
+  wpc9:
+    image: kdelfour/cloud9-docker
+    container_name: ${WPC9_DOMAIN}
+    hostname: ${WPC9_DOMAIN}
+    environment:
+      VIRTUAL_PORT: 80
+      VIRTUAL_HOST: ${WPC9_DOMAIN}
+    expose:
+     - "80"
+    volumes:
+     - ${WP_DIR}:/workspace
+    networks:
+     - net   
+  wpdev:
+    depends_on:
+     - db
+    image: orboan/dcsss-httpd-wpdev
+    container_name: ${WP_DOMAIN}
+    hostname: ${WP_DOMAIN}
+    environment:
+      SHELLINABOX_PORT: ${WP_SHELLINABOX_PORT}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_DATABASE: ${MYSQL_DATABASE_WP}
+      MYSQL_USER: ${MYSQL_USER_WP}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD_WP}
+      VIRTUAL_HOST: ${WP_DOMAIN}
+      VIRTUAL_PORT: 80
+      WP_URL: "https://${WP_DOMAIN}"
+      PASSWORD: ${BA_SSH_PASSWORD}
+    ports:
+      - "${WP_HTTP_PORT}:80"
+      - "${WP_HTTPS_PORT}:443"
+      - "${WP_SHELLINABOX_PORT}:4200"
+      - "${WP_SUPERVISOR_PORT}:9001"
+    volumes:
+     - ${WP_DIR}:/data/www/html
+    networks:
+     - net
+  dockerui:
+    image: uifd/ui-for-docker
+    container_name: docker-ui
+    hostname: docker-ui
+    environment:
+      VIRTUAL_HOST: ${DUI_DOMAIN}
+      VIRTUAL_PORT: 9000
+    ports:
+     - "${DOCKERUI_PORT}:9000"
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+    privileged: true
+    networks:
+     - net
+networks:
+  net:
+    driver: bridge     
+    ipam:
+     config:
+     - subnet: ${SUBNET} 

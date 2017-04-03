@@ -1,0 +1,137 @@
+#!/bin/bash
+
+MYSQL_N=2
+PMA_N=3
+LP_N=1
+WP_N=4
+
+dc_file=docker-compose.yml
+DATA_DIR=~/data
+IAW_LOCAL_DIR=$DATA_DIR/iaw-local
+export WP_DIR=$DATA_DIR/wp
+export LANDING_PAGE_DIR=$IAW_LOCAL_DIR/landing
+export SSL_DIR=$IAW_LOCAL_DIR/ssl
+export COMPOSE_PROJECT_NAME=io.iaw
+export MYSQL_HOST=db.iaw.io
+
+export BA_SSH_PASSWORD=webapp
+
+export DOMAIN=iaw.io
+export LANDING_PAGE_SSH_PORT=222${LP_N}
+export LANDING_PAGE_SHELLINABOX_PORT=910${LP_N}
+export LANDING_PAGE_SUPERVISOR_PORT=900${LP_N}
+
+export MYSQL_DOMAIN=db.iaw.io
+export MYSQL_ROOT_PASSWORD=mariadb
+export MYSQL_DATABASE_NC=nextcloud
+export MYSQL_USER_NC=ncuser
+export MYSQL_PASSWORD_NC=nextcloud
+export MYSQL_DATABASE_PMA=pma
+export MYSQL_USER_PMA=pmauser
+export MYSQL_PASSWORD_PMA=phpmyadmin
+export MYSQL_DATABASE_WP=wp
+export MYSQL_USER_WP=wpuser
+export MYSQL_PASSWORD_WP=wordpress
+export MYSQL_DB_PORT=3306
+export MYSQL_SSH_PORT=222${MYSQL_N}
+export MYSQL_SHELLINABOX_PORT=910${MYSQL_N}
+export MYSQL_SUPERVISOR_PORT=900${MYSQL_N}
+
+export NEXTCLOUD_DOMAIN=nc.iaw.io
+export NEXTCLOUD_HTTPS_PORT=444
+export NEXTCLOUD_HTTP_PORT=8084
+
+export PMA_DOMAIN=pma.iaw.io
+export PMA_HTTPS_PORT=4443
+export PMA_HTTP_PORT=8080
+export PMA_SSH_PORT=222${PMA_N}
+export PMA_SHELLINABOX_PORT=910${PMA_N}
+export PMA_SUPERVISOR_PORT=900${PMA_N}
+
+export COLLABORA_DOMAIN=col.iaw.io
+export COLLABORA_PORT=9980
+
+export LPC9_DOMAIN=lpc9.iaw.io
+export WPC9_DOMAIN=wpc9.iaw.io
+
+export WP_DOMAIN=wp.iaw.io
+export WP_HTTPS_PORT=442
+export WP_HTTP_PORT=82
+export WP_SSH_PORT=222${WP_N}
+export WP_SHELLINABOX_PORT=910${WP_N}
+export WP_SUPERVISOR_PORT=900${WP_N}
+
+export DOCKERUI_PORT=9990
+export DUI_DOMAIN=dui.iaw.io
+
+export SUBNET="172.25.0.0/24"
+
+function download_wp {
+mkdir -p $WP_DIR && cd $DATA_DIR
+sudo wget https://wordpress.org/latest.tar.gz -O ./latest.tar.gz
+sudo chown orboan:orboan ./latest.tar.gz
+}
+
+function init_wpconfig {
+mkdir -p $WP_DIR && cd $DATA_DIR
+rm $WP_DIR/wp-config*.php
+mv ./wp-config.php $WP_DIR
+}
+
+function init_wp {
+mkdir -p $WP_DIR && cd $DATA_DIR
+docker cp wp.iaw.io:/var/www/html/wp-config.php ./
+tar -xzvf latest.tar.gz > /dev/null
+if [[ -d "$WP_DIR/wp-content" ]]; then
+cp -r $WP_DIR/wp-content ./
+fi
+rm -rf $WP_DIR/*
+cp -r wordpress/* $WP_DIR/
+rm -rf wordpress
+if [[ -d "./wp-content" ]]; then
+rm -rf $WP_DIR/wp-content
+cp -r ./wp-content $WP_DIR/
+rm -rf ./wp-content
+fi
+init_wpconfig
+}
+
+function wp_config_init {
+mkdir -p $WP_DIR && cd $DATA_DIR
+if [ ! -f ./latest.tar.gz ]; then
+    echo "Downloading latest wordpress..."
+    download_wp
+fi
+
+if [ ! -f "www/html/wp-config.php" ]; then
+  init_wp
+fi
+}
+
+function landing_page_init {
+
+}
+
+function run_containers {
+mkdir -p $DATA_DIR && cd $DATA_DIR
+
+if [ ! -f "${IAW_LOCAL_DIR}/${dc_file}" ]; then
+if [ -d "${IAW_LOCAL_DIR}" ]; then
+if [ "$1" == "-f" ]; then
+sudo rm -rf ${IAW_LOCAL_DIR}
+fi
+fi
+if [ ! -d "${IAW_LOCAL_DIR}" ]; then
+git clone https://github.com/orboan/iaw-local.git
+fi
+fi
+cd $IAW_LOCAL_DIR
+if [ -f "${dc_file}" ]; then
+docker-compose up -d
+fi
+}
+
+run_containers
+wp_config_init
+
+exit 0
