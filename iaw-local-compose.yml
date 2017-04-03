@@ -108,6 +108,8 @@ services:
      - "9004:9001"
     volumes:
      - ${LANDING_PAGE_DIR}:/data
+    networks:
+     - net    
   dockerui:
     image: uifd/ui-for-docker
     container_name: docker-ui
