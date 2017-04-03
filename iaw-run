@@ -108,10 +108,6 @@ if [ ! -f "www/html/wp-config.php" ]; then
 fi
 }
 
-function landing_page_init {
-
-}
-
 function run_containers {
 mkdir -p $DATA_DIR && cd $DATA_DIR
 
