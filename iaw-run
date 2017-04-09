@@ -114,8 +114,10 @@ mkdir -p $DATA_DIR && cd $DATA_DIR
 if [ ! -f "${IAW_LOCAL_DIR}/${dc_file}" ]; then
 git clone https://github.com/orboan/iaw-local.git
 fi
+if [ -d "$DATA_DIR/iaw-local" ]; then
 yes | cp -rf $DATA_DIR/iaw-local/* $DATA_DIR/
-rm -rf $DATA_DIR
+rm -rf $DATA_DIR/iaw-local
+fi
 cd $IAW_LOCAL_DIR
 if [ -f "${dc_file}" ]; then
 docker-compose up -d
@@ -123,6 +125,7 @@ fi
 }
 
 run_containers
+wait
 wp_config_init
 
 exit 0
