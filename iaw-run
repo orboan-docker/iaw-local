@@ -7,7 +7,7 @@ WP_N=4
 
 dc_file=docker-compose.yml
 DATA_DIR=~/data
-IAW_LOCAL_DIR=$DATA_DIR/iaw-local
+IAW_LOCAL_DIR=$DATA_DIR
 export WP_DIR=$DATA_DIR/wp
 export LANDING_PAGE_DIR=$IAW_LOCAL_DIR/landing
 export SSL_DIR=$IAW_LOCAL_DIR/ssl
@@ -112,15 +112,10 @@ function run_containers {
 mkdir -p $DATA_DIR && cd $DATA_DIR
 
 if [ ! -f "${IAW_LOCAL_DIR}/${dc_file}" ]; then
-if [ -d "${IAW_LOCAL_DIR}" ]; then
-if [ "$1" == "-f" ]; then
-sudo rm -rf ${IAW_LOCAL_DIR}
-fi
-fi
-if [ ! -d "${IAW_LOCAL_DIR}" ]; then
 git clone https://github.com/orboan/iaw-local.git
 fi
-fi
+yes | cp -rf $DATA_DIR/iaw-local/* $DATA_DIR/
+rm -rf $DATA_DIR
 cd $IAW_LOCAL_DIR
 if [ -f "${dc_file}" ]; then
 docker-compose up -d
