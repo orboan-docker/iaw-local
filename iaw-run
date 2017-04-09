@@ -69,7 +69,7 @@ export SUBNET="172.25.0.0/24"
 function download_wp {
 mkdir -p $WP_DIR && cd $DATA_DIR
 sudo wget https://wordpress.org/latest.tar.gz -O ./latest.tar.gz
-sudo chown orboan:orboan ./latest.tar.gz
+sudo chown vagrant:vagrant ./latest.tar.gz
 }
 
 function init_wpconfig {
