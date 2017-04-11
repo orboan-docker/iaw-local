@@ -42,7 +42,7 @@ services:
   nc:
     depends_on:
       - db
-    image: orboan/nextcloud-https
+    image: orboan/nextcloud-https:iaw
     container_name: ${NEXTCLOUD_DOMAIN}
     hostname: ${NEXTCLOUD_DOMAIN}
     environment:
@@ -82,7 +82,7 @@ services:
     networks:
      - net
   col:
-    image: orboan/collabora:unsecure
+    image: orboan/collabora:iaw
     container_name: ${COLLABORA_DOMAIN}
     hostname: ${COLLABORA_DOMAIN}
     environment:
