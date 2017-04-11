@@ -5,8 +5,10 @@ PMA_N=3
 LP_N=1
 WP_N=4
 
+HOME=/home/vagrant
+
 dc_file=docker-compose.yml
-DATA_DIR=~/data
+DATA_DIR=$HOME/data
 IAW_LOCAL_DIR=$DATA_DIR
 export WP_DIR=$DATA_DIR/wp
 export LANDING_PAGE_DIR=$IAW_LOCAL_DIR/landing
@@ -26,7 +28,7 @@ export MYSQL_ROOT_PASSWORD=mariadb
 export MYSQL_DATABASE_NC=nextcloud
 export MYSQL_USER_NC=ncuser
 export MYSQL_PASSWORD_NC=nextcloud
-export MYSQL_DATABASE_PMA=pma
+export MYSQL_DATABASE_PMA=phpmyadmin
 export MYSQL_USER_PMA=pmauser
 export MYSQL_PASSWORD_PMA=phpmyadmin
 export MYSQL_DATABASE_WP=wp
