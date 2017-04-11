@@ -13,6 +13,7 @@ services:
       - ${SSL_DIR}:/etc/nginx/certs
     networks:
      - net
+    restart: always
   db:
     image: orboan/dcsss-mariadb
     container_name: ${MYSQL_DOMAIN}
@@ -39,6 +40,7 @@ services:
      - ~/data/db:/var/lib/mysql
     networks:
       - net
+    restart: always
   nc:
     depends_on:
       - db
@@ -56,6 +58,7 @@ services:
      - ~/data/nc:/var/www/html/data
     networks:
      - net
+    restart: always
   pma:
     depends_on:
      - db
@@ -81,6 +84,7 @@ services:
      - "${PMA_SUPERVISOR_PORT}:9001"
     networks:
      - net
+    restart: always
   col:
     image: orboan/collabora:iaw
     container_name: ${COLLABORA_DOMAIN}
@@ -93,7 +97,8 @@ services:
     ports:
      - "${COLLABORA_PORT}:9980" 
     networks:
-     - net    
+     - net
+    restart: always
   landing:
     image: orboan/dcsss-httpd-php
     container_name: ${DOMAIN}
@@ -113,6 +118,7 @@ services:
      - ${LANDING_PAGE_DIR}:/data/www/html
     networks:
      - net
+    restart: always
   lpc9:
     image: kdelfour/cloud9-docker
     container_name: ${LPC9_DOMAIN}
@@ -126,6 +132,7 @@ services:
      - ${LANDING_PAGE_DIR}:/workspace
     networks:
      - net
+    restart: always
   wpc9:
     image: kdelfour/cloud9-docker
     container_name: ${WPC9_DOMAIN}
@@ -138,7 +145,8 @@ services:
     volumes:
      - ${WP_DIR}:/workspace
     networks:
-     - net   
+     - net
+    restart: always
   wpdev:
     depends_on:
      - db
@@ -164,6 +172,7 @@ services:
      - ${WP_DIR}:/data/www/html
     networks:
      - net
+    restart: always
   dockerui:
     image: uifd/ui-for-docker
     container_name: docker-ui
@@ -178,6 +187,7 @@ services:
     privileged: true
     networks:
      - net
+    restart: always
 networks:
   net:
     driver: bridge     
