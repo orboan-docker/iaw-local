@@ -46,6 +46,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "shell",
     inline: "mkdir -p /home/vagrant/data && cd /home/vagrant/data && echo localhost > /etc/hostname && hostname localhost && sudo OVERRIDE_DEFAULT_SERVER_USER=vagrant ./install.sh -d -e > /dev/null && sudo sed --in-place='' --expression='s/^BIND_IP=.*/BIND_IP=0.0.0.0/' /opt/sandstorm/sandstorm.conf && sudo service sandstorm restart && printf '\nYour server is online. It has the dev accounts feature enabled, so anyone can log in.\n\nDetails and customization instructions are available here:\n- https://github.com/sandstorm-io/sandstorm/wiki/Using-the-Vagrantfile\n\nVisit it at:\n  http://local.sandstorm.io:6080/' && ./iaw-run"
 
+  #Make use of the DNS server configured in the host
   config.vm.provider :virtualbox do |vb|
 	vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
   end	
