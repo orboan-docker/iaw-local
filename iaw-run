@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo su - vagrant
+
 MYSQL_N=2
 PMA_N=3
 LP_N=1
